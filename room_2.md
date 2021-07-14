@@ -75,7 +75,7 @@ class RoomApplication : Application() {
 
 ```xml
 <application
-    android:name=".RoomTest3Application"
+    android:name=".RoomApplication"
     ...
     >
     ...
@@ -87,7 +87,7 @@ class RoomApplication : Application() {
 В нужном месте получаем объект базы данных
 
 ```kotlin
-val db = (application as RoomTest3Application).actionDb
+val db = (application as RoomApplication).actionDb
 ```
 
 В нашем случае меняем код активити
