@@ -117,3 +117,7 @@ class MainActivity : AppCompatActivity() {
 ```
 
 Запускаем.
+
+## Pagination
+
+https://medium.com/swlh/paging3-recyclerview-pagination-made-easy-333c7dfa8797
