@@ -23,6 +23,3 @@ import androidx.compose.runtime.getValue
 
 ### ModelView
 
-
-## Preview
-
