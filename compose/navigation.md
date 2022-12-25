@@ -173,3 +173,38 @@ https://developer.android.com/guide/components/activities/tasks-and-back-stack
 
 TaskStackBuilder служит, чтобы создать backStack или разместить новую активити на существующий backStack, но если используется Compose с одной активити, то я не вижу смысла использовать TaskStackBuilder, т.к. backStack для навигации Compose все равно сбрасывается.
 
+## Route
+
+Можно создать Route
+
+```kotlin
+sealed class Route (val route: String) {
+    object Profile: Route("profile")
+    object FriendList : Route("friendList") {
+        val deepLink = "fn://element"
+    }
+}
+```
+
+И потом использовать
+
+```kotlin
+NavHost(navController = navController, startDestination = Route.Profile.route) {
+            // В этом случае, если каждая Composable функция использует ViewModel, то это будет не одна ViewModel, а независимые, при этом, также при каждом новом вызове Dectination, также будет создаваться новая ViewModel, т.к. у каждого маршрута свой скоуп (временная область, временный специальный контекст)
+            composable(Route.Profile.route) {
+                Column {
+                    Profile(navController)
+                }
+            }
+            composable(
+                route = Route.FriendList.route,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = Route.FriendList.deepLink }
+                )
+            ) {
+                Column {
+                    FriendsList(navController)
+                }
+            }
+        }
+```
