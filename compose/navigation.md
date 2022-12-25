@@ -20,18 +20,43 @@ val navController = rememberNavController()
 
 ```kotlin
 NavHost(navController = navController, startDestination = "profile") {
+    // В этом случае, если каждая Composable функция использует ViewModel, то это будет не одна ViewModel, а независимые, при этом, также при каждом новом вызове Dectination, также будет создаваться новая ViewModel, т.к. у каждого маршрута свой скоуп (временная область, временный специальный контекст)
     composable("profile") { Profile(/*...*/) }
     composable("friendslist") { FriendsList(/*...*/) }
     /*...*/
 }
 ```
 
-
 Далее обрабатываем нажатия кнопок
 
 ```kotlin
 navController.navigate("friendslist")
 ```
+
+Также, при необходимости при обработке нажатия кнопок следует очищать backstack
+
+```kotlin
+// Pop everything up to the "home" destination off the back stack before
+// navigating to the "friendslist" destination
+navController.navigate("friendslist") {
+    popUpTo("home")
+}
+
+// Pop everything up to and including the "home" destination off
+// the back stack before navigating to the "friendslist" destination
+navController.navigate("friendslist") {
+    popUpTo("home") { inclusive = true }
+}
+
+// Navigate to the "search” destination only if we’re not already on
+// the "search" destination, avoiding multiple copies on the top of the
+// back stack
+navController.navigate("search") {
+    launchSingleTop = true
+}
+```
+
+https://developer.android.com/jetpack/compose/navigation#nav-to-composable
 
 ## Простой пример использования co Scaffold
 
@@ -131,3 +156,20 @@ val currentRoute = navBackStackEntry?.destination?.route
 ```
 
 [Подробнее](https://stackoverflow.com/questions/66493551/jetpack-compose-navigation-get-route-of-current-destination-as-string)
+
+## Открыть Composable из Notification
+
+Необходимо использовать DeepLink https://proandroiddev.com/open-composables-via-notification-with-jetpack-navigation-b922384f4091
+
+https://developer.android.com/jetpack/compose/navigation#deeplinks
+
+При создании PendingIntent используют TaskStackBuilder 
+
+Здесь https://stackoverflow.com/a/55335775/11596781 объяснение
+
+https://developer.android.com/guide/components/activities/tasks-and-back-stack
+
+Сам класс https://developer.android.com/reference/kotlin/androidx/core/app/TaskStackBuilder
+
+TaskStackBuilder служит, чтобы создать backStack или разместить новую активити на существующий backStack, но если используется Compose с одной активити, то я не вижу смысла использовать TaskStackBuilder, т.к. backStack для навигации Compose все равно сбрасывается.
+
