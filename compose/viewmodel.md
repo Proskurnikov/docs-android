@@ -1,5 +1,11 @@
 # ViewModel
 
+Подключаем
+
+```gradle
+implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+```
+
 Создаем uiState
 
 ```kotlin
